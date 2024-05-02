@@ -1,0 +1,223 @@
+package workWithKeys;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.Key;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.security.Security;
+import java.security.cert.X509Certificate;
+import java.util.Base64;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
+import javax.security.auth.x500.X500Principal;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.Arrays;
+
+import workWithCertificates.Certs;
+
+public class WorkWithKeys {
+	private static final String KEY_ALG = "RSA";
+	private static final String CIPHER = "AES";
+	private static final int KEY_SIZE = 128;
+	
+	private static final String SESSION_KEYS = "C:\\Users\\Bojan\\Kriptografija_projekat\\Okruzenje\\sessionKeys\\";
+		
+	public static KeyPair generateKeyPair() throws Exception {
+
+		KeyPairGenerator kpg = KeyPairGenerator.getInstance(KEY_ALG);
+		kpg.initialize(2048);
+		KeyPair keyPair = kpg.generateKeyPair();
+
+		return keyPair;
+	}
+	
+	public static Key generateSessionKey() {
+        SecureRandom secureRandom = new SecureRandom();
+        KeyGenerator keyGenerator = null;
+
+        try {
+            keyGenerator = KeyGenerator.getInstance("AES");
+        } catch (NoSuchAlgorithmException ex) {
+            ex.printStackTrace();
+        }
+
+        keyGenerator.init(256, secureRandom);
+
+        return keyGenerator.generateKey();
+    }
+	
+	
+	public static byte[] passwordHashing(String passwordToHash) {
+		
+		MessageDigest md = null;
+		byte[] messageDigest = null;
+		String salt = "saltsalt";
+		byte[] saltBytes = salt.getBytes();
+		try {
+			md = MessageDigest.getInstance("SHA-512");
+			md.update(saltBytes);
+			messageDigest = md.digest(passwordToHash.getBytes(StandardCharsets.UTF_8));
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+		}
+		
+		//System.out.println(new String(messageDigest, StandardCharsets.UTF_8));
+		return messageDigest;
+	}
+	
+	public static void encryptSymmetricKey(X509Certificate userCert, Key symmetricKey) throws Exception {
+		
+		PublicKey publicKey = userCert.getPublicKey();
+		byte[] bytesToEncode = symmetricKey.getEncoded();
+		//System.out.println("Encrypt: " + bytesToEncode);
+		Cipher cipher = Cipher.getInstance("RSA");
+		cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+		byte[] bytes = cipher.doFinal(bytesToEncode);
+		String encryptedText = Base64.getEncoder().encodeToString(bytes);
+		String cn = getCertFileName(userCert);
+	//	System.out.println(cn);
+		Files.write(Paths.get(SESSION_KEYS + cn + ".key"), encryptedText.getBytes(StandardCharsets.UTF_8));
+
+	}
+
+	public static SecretKey decryptSymmetricKey(X509Certificate userCert) throws Exception {
+	
+		String cn = getCertFileName(userCert);
+		String encryptedText = new String(Files.readAllBytes(Paths.get(SESSION_KEYS + cn + ".key")), StandardCharsets.UTF_8);
+		byte[] encryptedBytes = Base64.getDecoder().decode(encryptedText);
+		
+		PrivateKey privateKey = workWithCertificates.Certs.getPrivateKeyFromPKCS12(cn + ".p12");
+		
+		Cipher cipher = Cipher.getInstance("RSA");
+		cipher.init(Cipher.DECRYPT_MODE, privateKey);
+		byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
+		
+		//String decryptedText = new String(decryptedBytes, StandardCharsets.UTF_8);
+
+		SecretKey secretKey = new SecretKeySpec(decryptedBytes, "AES");
+		
+		return secretKey;
+	}
+	
+	private static String getCertFileName(X509Certificate certificate) {
+		//get the userCert file name
+		X500Principal subjecPrincipal = certificate.getSubjectX500Principal();
+		String subjectDN = subjecPrincipal.getName();
+		String cn = " ";
+        String[] dnComponents = subjectDN.split(",");
+        for (String component : dnComponents) {
+        	String[] nameValue = component.trim().split("=");
+        	if (nameValue.length == 2 && nameValue[0].equalsIgnoreCase("CN")) {
+        		cn = nameValue[1];      
+        		break;
+        	}
+        }    
+        
+        return cn;
+	}
+	
+	//OVDJE JE POTREBNO IZMJENITI OVE PUTANJE, ALI TO KAD SVE ZAVRSIM
+	public static void encryption(Key symmetricKey) throws Exception {
+		byte[] bytes = Files.readAllBytes(Paths.get("C:\\Users\\Bojan\\Kriptografija_projekat\\Okruzenje\\sessionKeys\\PlainText.txt"));
+		Cipher cipher = Cipher.getInstance("AES");
+		cipher.init(Cipher.ENCRYPT_MODE, symmetricKey);
+		byte[] cipherText = cipher.doFinal(bytes);
+		FileOutputStream fos = new FileOutputStream("C:\\Users\\Bojan\\Kriptografija_projekat\\Okruzenje\\sessionKeys\\Cipher.txt");
+		fos.write(cipherText);
+		fos.close();
+	}
+	
+	public static void decryption(Key symmetricKey) throws Exception {
+		byte[] bytes = Files.readAllBytes(Paths.get("C:\\Users\\Bojan\\Kriptografija_projekat\\Okruzenje\\sessionKeys\\Cipher.txt"));
+		Cipher cipher = Cipher.getInstance("AES");
+		cipher.init(Cipher.DECRYPT_MODE, symmetricKey);
+		byte[] cipherText = cipher.doFinal(bytes);
+		FileOutputStream fos = new FileOutputStream("C:\\Users\\Bojan\\Kriptografija_projekat\\Okruzenje\\sessionKeys\\Dekriptovano.txt");
+		fos.write(cipherText);
+		fos.close();
+	}
+
+	public static void readBinary() { 
+		String direktorijum1 = "C:\\Users\\Bojan\\Documents\\Repository\\Directory1\\";
+		String direktorijum2 = "C:\\Users\\Bojan\\Documents\\Repository\\Directory2\\";
+		String direktorijum3 = "C:\\Users\\Bojan\\Documents\\Repository\\Directory3\\";
+		String direktorijum4 = "C:\\Users\\Bojan\\Documents\\Repository\\Directory4\\";
+		String direktorijum5 = "C:\\Users\\Bojan\\Documents\\Repository\\Directory5\\";
+		String direktorijum6 = "C:\\Users\\Bojan\\Documents\\Repository\\Directory6\\";
+		
+		try {
+		//FileInputStream fis = new FileInputStream("C:\\Users\\Bojan\\Kriptografija_projekat\\Okruzenje\\sessionKeys\\PlainText.txt");
+	    FileInputStream fis = new FileInputStream("C:\\Users\\Bojan\\Downloads\\NotoSansShavian-Regular.bin");
+		byte[] binary = fis.readAllBytes();
+		fis.close();
+		byte[] array = new byte[6];
+		System.out.println(binary.length);
+		double tmp =(double) binary.length / 6;
+		int result = (int)Math.ceil(tmp);
+		System.out.println(result);
+		byte[][] binaryArray = new byte[6][];
+		FileOutputStream fos = null;
+		for(int i = 0; i < 6; i++) {
+			int startIndex = i * result;
+		    int endIndex = Math.min(startIndex + result, binary.length);
+		    int sizeOfCurrentArray = endIndex - startIndex;
+		    binaryArray[i] = new byte[sizeOfCurrentArray];
+		    System.arraycopy(binary, startIndex, binaryArray[i], 0, sizeOfCurrentArray);
+		    if(i == 0) {
+		    	fos = new FileOutputStream(direktorijum1 + "DokumentSegment" + (i + 1) +".txt");
+				fos.write(binaryArray[i]);
+		    }
+		    if(i == 1) {
+		    	fos = new FileOutputStream(direktorijum2 + "DokumentSegment" + (i + 1) +".txt");
+				fos.write(binaryArray[i]);
+		    }
+		    if(i == 2) {
+		    	fos = new FileOutputStream(direktorijum3 + "DokumentSegment" + (i + 1) +".txt");
+				fos.write(binaryArray[i]);
+		    }
+		    if(i == 3) {
+		    	fos = new FileOutputStream(direktorijum4 + "DokumentSegment" + (i + 1) +".txt");
+				fos.write(binaryArray[i]);
+		    }
+		    if(i == 4) {
+		    	fos = new FileOutputStream(direktorijum5 + "DokumentSegment" + (i + 1) +".txt");
+				fos.write(binaryArray[i]);
+		    }
+		    if(i == 5) {
+		    	fos = new FileOutputStream(direktorijum6 + "DokumentSegment" + (i + 1) +".txt");
+				fos.write(binaryArray[i]);
+		    }
+		    
+		}
+		
+		fos.close();
+		
+		}catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+		}
+	
+	}
+	
+}

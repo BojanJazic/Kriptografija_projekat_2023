@@ -1,0 +1,181 @@
+package gui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import org.bouncycastle.asn1.x509.TBSCertificate;
+
+import modelDB.Certificate;
+import workWithCertificates.Certs;
+
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+
+public class registration extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField tbIme;
+	private JTextField tbEmail;
+	private JTextField tbDrzava;
+	private JTextField tbZemlja;
+	private JTextField tbOrgJed;
+	private JTextField tbOrganizacija;
+	private JLabel lbOrganizacija;
+	private JButton tbRegistracija;
+	private JLabel lbLokacija;
+	private JTextField tbLokacija;
+	private JLabel lbJMBG;
+	private JTextField tbJMBG;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					registration frame = new registration();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public registration() {
+		setTitle("REGISTRACIJA");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 437, 406);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Ime:");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel.setBounds(23, 63, 100, 27);
+		contentPane.add(lblNewLabel);
+		
+		tbIme = new JTextField();
+		tbIme.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbIme.setBounds(143, 63, 225, 27);
+		contentPane.add(tbIme);
+		tbIme.setColumns(10);
+		
+		JLabel lblEmail = new JLabel("E-mail:");
+		lblEmail.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEmail.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblEmail.setBounds(23, 101, 100, 27);
+		contentPane.add(lblEmail);
+		
+		tbEmail = new JTextField();
+		tbEmail.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbEmail.setColumns(10);
+		tbEmail.setBounds(143, 101, 225, 27);
+		contentPane.add(tbEmail);
+		
+		JLabel lbDrzava = new JLabel("Država:");
+		lbDrzava.setHorizontalAlignment(SwingConstants.CENTER);
+		lbDrzava.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lbDrzava.setBounds(23, 139, 100, 27);
+		contentPane.add(lbDrzava);
+		
+		tbDrzava = new JTextField();
+		tbDrzava.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbDrzava.setColumns(10);
+		tbDrzava.setBounds(143, 139, 225, 27);
+		contentPane.add(tbDrzava);
+		
+		JLabel lbZemlja = new JLabel("Zemlja:");
+		lbZemlja.setHorizontalAlignment(SwingConstants.CENTER);
+		lbZemlja.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lbZemlja.setBounds(23, 177, 100, 27);
+		contentPane.add(lbZemlja);
+		
+		tbZemlja = new JTextField();
+		tbZemlja.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbZemlja.setColumns(10);
+		tbZemlja.setBounds(143, 177, 225, 27);
+		contentPane.add(tbZemlja);
+		
+		JLabel lbOrgJed = new JLabel("Org. jed:");
+		lbOrgJed.setHorizontalAlignment(SwingConstants.CENTER);
+		lbOrgJed.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lbOrgJed.setBounds(23, 248, 100, 27);
+		contentPane.add(lbOrgJed);
+		
+		tbOrgJed = new JTextField();
+		tbOrgJed.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbOrgJed.setColumns(10);
+		tbOrgJed.setBounds(143, 248, 225, 27);
+		contentPane.add(tbOrgJed);
+		
+		tbOrganizacija = new JTextField();
+		tbOrganizacija.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbOrganizacija.setColumns(10);
+		tbOrganizacija.setBounds(143, 286, 225, 27);
+		contentPane.add(tbOrganizacija);
+		
+		lbOrganizacija = new JLabel("Organizacija:");
+		lbOrganizacija.setHorizontalAlignment(SwingConstants.CENTER);
+		lbOrganizacija.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lbOrganizacija.setBounds(23, 286, 100, 27);
+		contentPane.add(lbOrganizacija);
+		
+		tbRegistracija = new JButton("Registruj se");
+		tbRegistracija.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Certs crt = new Certs();
+				try {
+					crt.certificateRequest(tbJMBG.getText(), tbIme.getText(), tbEmail.getText(), tbDrzava.getText(), tbZemlja.getText(), tbLokacija.getText(), tbOrgJed.getText(), tbOrganizacija.getText());
+				}catch (Exception ex) {
+					// TODO: handle exception
+					System.out.println(ex.getMessage());
+				}
+			}
+		});
+		tbRegistracija.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbRegistracija.setBounds(156, 324, 141, 32);
+		contentPane.add(tbRegistracija);
+		
+		lbLokacija = new JLabel("Lokacija:");
+		lbLokacija.setHorizontalAlignment(SwingConstants.CENTER);
+		lbLokacija.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lbLokacija.setBounds(23, 215, 100, 27);
+		contentPane.add(lbLokacija);
+		
+		tbLokacija = new JTextField();
+		tbLokacija.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbLokacija.setColumns(10);
+		tbLokacija.setBounds(143, 215, 225, 27);
+		contentPane.add(tbLokacija);
+		
+		lbJMBG = new JLabel("JMBG:");
+		lbJMBG.setHorizontalAlignment(SwingConstants.CENTER);
+		lbJMBG.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lbJMBG.setBounds(23, 25, 100, 27);
+		contentPane.add(lbJMBG);
+		
+		tbJMBG = new JTextField();
+		tbJMBG.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbJMBG.setColumns(10);
+		tbJMBG.setBounds(143, 25, 225, 27);
+		contentPane.add(tbJMBG);
+	}
+
+}

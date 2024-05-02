@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="C:/Users/Bojan/Downloads/mysql-connector-java-8.0.22.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Bojan/Downloads/bcpkix-jdk15to18-172.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Bojan/Downloads/bcprov-jdk15to18-172.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Bojan/Downloads/jce-ext-jdk13-172.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

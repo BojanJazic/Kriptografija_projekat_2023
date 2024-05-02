@@ -1,0 +1,1 @@
+module Projekat {exports dataAccess;exports workWithCertificates;exports modelDB;exports dbConnection;exports workWithKeys;exports workWithFiles;requires java.desktop;requires java.sql;requires mysql.connector.java;requires org.bouncycastle.pkix;requires org.bouncycastle.provider;}

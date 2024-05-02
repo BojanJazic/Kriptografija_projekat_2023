@@ -1,0 +1,67 @@
+package gui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import dataAccess.DataAccess;
+import modelDB.Certificate;
+
+import javax.swing.JComboBox;
+import javax.swing.JButton;
+import java.awt.Font;
+import java.util.List;
+
+public class checkCert extends JFrame {
+
+	private JPanel contentPane;
+	private JComboBox cbSertifikati;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					checkCert frame = new checkCert();
+					frame.setVisible(true);
+					
+					DataAccess da = new DataAccess();
+					List<Certificate> var = da.getAllCerts();
+					
+					for(Certificate str : var)
+					cbSertifikati.addItem(str.getCertificateName());
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public checkCert() {
+		setTitle("Provjera sertifikata");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 175);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+	    cbSertifikati = new JComboBox();
+		cbSertifikati.setBounds(64, 11, 294, 35);
+		contentPane.add(cbSertifikati);
+		
+		JButton btnSubmit = new JButton("Provjera");
+		btnSubmit.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnSubmit.setBounds(156, 69, 119, 35);
+		contentPane.add(btnSubmit);
+	}
+}

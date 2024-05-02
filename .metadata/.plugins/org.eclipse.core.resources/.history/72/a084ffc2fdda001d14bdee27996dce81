@@ -1,0 +1,141 @@
+package gui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+
+public class registration extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField tbIme;
+	private JTextField tbEmail;
+	private JTextField tbDrzava;
+	private JTextField tbZemlja;
+	private JTextField tbOrgJed;
+	private JTextField tbOrganizacija;
+	private JLabel lbOrganizacija;
+	private JButton tbRegistracija;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					registration frame = new registration();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public registration() {
+		setTitle("REGISTRACIJA");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 437, 359);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Ime:");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel.setBounds(10, 11, 100, 27);
+		contentPane.add(lblNewLabel);
+		
+		tbIme = new JTextField();
+		tbIme.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbIme.setBounds(130, 11, 225, 27);
+		contentPane.add(tbIme);
+		tbIme.setColumns(10);
+		
+		JLabel lblEmail = new JLabel("E-mail:");
+		lblEmail.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEmail.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblEmail.setBounds(10, 49, 100, 27);
+		contentPane.add(lblEmail);
+		
+		tbEmail = new JTextField();
+		tbEmail.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbEmail.setColumns(10);
+		tbEmail.setBounds(130, 49, 225, 27);
+		contentPane.add(tbEmail);
+		
+		JLabel lbDrzava = new JLabel("Država:");
+		lbDrzava.setHorizontalAlignment(SwingConstants.CENTER);
+		lbDrzava.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lbDrzava.setBounds(10, 87, 100, 27);
+		contentPane.add(lbDrzava);
+		
+		tbDrzava = new JTextField();
+		tbDrzava.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbDrzava.setColumns(10);
+		tbDrzava.setBounds(130, 87, 225, 27);
+		contentPane.add(tbDrzava);
+		
+		JLabel lbZemlja = new JLabel("Zemlja:");
+		lbZemlja.setHorizontalAlignment(SwingConstants.CENTER);
+		lbZemlja.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lbZemlja.setBounds(10, 125, 100, 27);
+		contentPane.add(lbZemlja);
+		
+		tbZemlja = new JTextField();
+		tbZemlja.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbZemlja.setColumns(10);
+		tbZemlja.setBounds(130, 125, 225, 27);
+		contentPane.add(tbZemlja);
+		
+		JLabel lbOrgJed = new JLabel("Org. jed:");
+		lbOrgJed.setHorizontalAlignment(SwingConstants.CENTER);
+		lbOrgJed.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lbOrgJed.setBounds(10, 163, 100, 27);
+		contentPane.add(lbOrgJed);
+		
+		tbOrgJed = new JTextField();
+		tbOrgJed.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbOrgJed.setColumns(10);
+		tbOrgJed.setBounds(130, 163, 225, 27);
+		contentPane.add(tbOrgJed);
+		
+		tbOrganizacija = new JTextField();
+		tbOrganizacija.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbOrganizacija.setColumns(10);
+		tbOrganizacija.setBounds(130, 201, 225, 27);
+		contentPane.add(tbOrganizacija);
+		
+		lbOrganizacija = new JLabel("Organizacija:");
+		lbOrganizacija.setHorizontalAlignment(SwingConstants.CENTER);
+		lbOrganizacija.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lbOrganizacija.setBounds(10, 201, 100, 27);
+		contentPane.add(lbOrganizacija);
+		
+		tbRegistracija = new JButton("Registruj se");
+		tbRegistracija.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		tbRegistracija.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbRegistracija.setBounds(149, 259, 141, 32);
+		contentPane.add(tbRegistracija);
+	}
+
+}

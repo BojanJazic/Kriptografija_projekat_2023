@@ -1,0 +1,46 @@
+package modelDB;
+
+public class Data {
+
+	int DataID;
+	String ID;
+	String FileName;
+	String segment1;
+	String segment2;
+	String segment3;
+	String segment4;
+	String segment5;
+	String segment6;
+
+	public Data(int dataID, String fileName, String iD) {
+		super();
+		DataID = dataID;
+		FileName = fileName;
+		ID = iD;
+	}
+
+	public int getDataID() {
+		return DataID;
+	}
+
+	public void setDataID(int dataID) {
+		DataID = dataID;
+	}
+
+	public String getFileName() {
+		return FileName;
+	}
+
+	public void setFileName(String fileName) {
+		FileName = fileName;
+	}
+
+	public String getID() {
+		return ID;
+	}
+
+	public void setID(String iD) {
+		ID = iD;
+	}
+
+}
